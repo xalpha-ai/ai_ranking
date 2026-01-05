@@ -296,3 +296,20 @@ def get_latest_scores(brand_name):
         }
     finally:
         session.close()
+
+
+def get_all_brands():
+    """Get all unique brands that have been analyzed"""
+    session = get_session()
+    try:
+        from sqlalchemy import distinct
+
+        # Get unique brand names from visibility_scores table
+        brands = session.query(
+            distinct(VisibilityScore.brand_name),
+            VisibilityScore.industry
+        ).order_by(VisibilityScore.brand_name).all()
+
+        return [{'name': brand[0], 'industry': brand[1]} for brand in brands]
+    finally:
+        session.close()

@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 from database import (
     init_db, save_visibility_score, save_competitive_analysis,
     save_ranking_analysis, save_geographic_score,
-    get_historical_visibility_scores, get_latest_scores
+    get_historical_visibility_scores, get_latest_scores, get_all_brands
 )
 
 # Load environment variables
@@ -1713,6 +1713,16 @@ def get_latest_scores_api(brand_name):
 
         return jsonify({'success': True, 'data': result})
 
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/brands', methods=['GET'])
+def get_brands_api():
+    """Get all brands that have been analyzed"""
+    try:
+        brands = get_all_brands()
+        return jsonify({'success': True, 'brands': brands})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

@@ -415,24 +415,67 @@
             }
         });
 
+        // Load brands from API
+        async function loadBrands() {
+            try {
+                const response = await fetch('/api/brands');
+                const result = await response.json();
+
+                if (result.success && result.brands && result.brands.length > 0) {
+                    const select = document.getElementById('brandSelector');
+
+                    // Clear existing options except first one
+                    select.innerHTML = '<option value="">Select Brand...</option>';
+
+                    // Add all brands
+                    result.brands.forEach(brand => {
+                        const option = document.createElement('option');
+                        option.value = brand.name;
+                        option.textContent = `${brand.name} (${brand.industry})`;
+                        select.appendChild(option);
+                    });
+
+                    // Auto-select first brand and load its data
+                    if (result.brands.length > 0) {
+                        select.value = result.brands[0].name;
+                        currentBrand = result.brands[0].name;
+                        loadLatestScores(result.brands[0].name);
+                        loadHistoricalData(result.brands[0].name);
+                    }
+                } else {
+                    // No brands yet - show message
+                    document.getElementById('alertsList').innerHTML = `
+                        <div class="flex items-start p-3 bg-blue-50 border-l-4 border-blue-400 rounded">
+                            <svg class="w-5 h-5 text-blue-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                            </svg>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">No data yet</p>
+                                <p class="text-xs text-gray-600 mt-1">Run your first analysis to populate the dashboard</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading brands:', error);
+                document.getElementById('alertsList').innerHTML = `
+                    <div class="flex items-start p-3 bg-red-50 border-l-4 border-red-400 rounded">
+                        <svg class="w-5 h-5 text-red-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Error loading brands</p>
+                            <p class="text-xs text-gray-600 mt-1">${error.message}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             initCharts();
-
-            // Load brands from localStorage (from previous analyses)
-            const allResults = JSON.parse(localStorage.getItem('allResults') || '{}');
-            if (allResults.brand) {
-                const select = document.getElementById('brandSelector');
-                const option = document.createElement('option');
-                option.value = allResults.brand;
-                option.textContent = allResults.brand;
-                option.selected = true;
-                select.appendChild(option);
-
-                currentBrand = allResults.brand;
-                loadLatestScores(allResults.brand);
-                loadHistoricalData(allResults.brand);
-            }
+            loadBrands();
         });
     </script>
 </body>
