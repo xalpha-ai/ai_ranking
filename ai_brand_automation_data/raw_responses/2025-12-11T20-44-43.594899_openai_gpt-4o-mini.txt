@@ -1,0 +1,82 @@
+{
+  "category": "Solar energy",
+  "top_10": [
+    {
+      "rank": 1,
+      "brand": "Tesla Solar",
+      "reason": "Industry-leading technology and brand recognition"
+    },
+    {
+      "rank": 2,
+      "brand": "SunPower",
+      "reason": "High efficiency solar panels and strong customer service"
+    },
+    {
+      "rank": 3,
+      "brand": "LG Solar",
+      "reason": "Reliable products and strong warranties"
+    },
+    {
+      "rank": 4,
+      "brand": "Canadian Solar",
+      "reason": "Cost-effective solutions with good performance"
+    },
+    {
+      "rank": 5,
+      "brand": "First Solar",
+      "reason": "Expertise in manufacturing and large-scale solar projects"
+    },
+    {
+      "rank": 6,
+      "brand": "Vivint Solar",
+      "reason": "Strong customer acquisition and installation services"
+    },
+    {
+      "rank": 7,
+      "brand": "Enphase Energy",
+      "reason": "Innovative microinverter technology"
+    },
+    {
+      "rank": 8,
+      "brand": "REC Group",
+      "reason": "High-quality products and sustainability focus"
+    },
+    {
+      "rank": 9,
+      "brand": "JinkoSolar",
+      "reason": "Extensive global reach and competitive pricing"
+    },
+    {
+      "rank": 10,
+      "brand": "SMA Solar Technology",
+      "reason": "Leading inverter technology and quality"
+    }
+  ],
+  "key_ranking_factors": [
+    "brand recognition",
+    "customer satisfaction",
+    "product efficiency",
+    "technological innovation",
+    "market share"
+  ],
+  "brand_evaluation": {
+    "brand": "SolaGrid",
+    "appears_in_top_10": false,
+    "rank_if_listed": null,
+    "summary": "SolaGrid lacks significant market presence and brand recognition compared to established competitors.",
+    "missing_information": [
+      "Market performance data and customer reviews"
+    ],
+    "narrative_strengths": [
+      "Potential for innovation and emerging market solutions"
+    ],
+    "narrative_weaknesses": [
+      "Limited brand awareness and insufficient customer feedback"
+    ]
+  },
+  "improvement_recommendations": [
+    "Enhance brand visibility through targeted marketing campaigns",
+    "Engage with customers on social media platforms to build trust",
+    "Develop partnerships with established players for credibility"
+  ]
+}

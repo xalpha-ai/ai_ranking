@@ -1,0 +1,100 @@
+{
+  "category": "Solar Energy",
+  "top_10": [
+    {
+      "rank": 1,
+      "brand": "Tesla Solar",
+      "reason": "Market leader with advanced solar technology, strong brand recognition, and integrated energy solutions."
+    },
+    {
+      "rank": 2,
+      "brand": "SunPower",
+      "reason": "High-efficiency solar panels and reputable customer service with a strong presence in residential and commercial sectors."
+    },
+    {
+      "rank": 3,
+      "brand": "LG Solar",
+      "reason": "Premium quality solar panels with robust durability and performance warranty backing."
+    },
+    {
+      "rank": 4,
+      "brand": "Canadian Solar",
+      "reason": "Globally recognized for cost-effective panels and large project capabilities."
+    },
+    {
+      "rank": 5,
+      "brand": "JinkoSolar",
+      "reason": "One of the largest manufacturers worldwide with competitive pricing and extensive distribution."
+    },
+    {
+      "rank": 6,
+      "brand": "Enphase Energy",
+      "reason": "Leader in microinverter technology improving solar panel efficiency and energy conversion."
+    },
+    {
+      "rank": 7,
+      "brand": "First Solar",
+      "reason": "Specializes in thin-film solar technology with strong emphasis on utility-scale projects."
+    },
+    {
+      "rank": 8,
+      "brand": "Vivint Solar",
+      "reason": "Strong residential solar installer with flexible financing options enhancing consumer accessibility."
+    },
+    {
+      "rank": 9,
+      "brand": "Sunrun",
+      "reason": "Market leader in solar leasing and power purchase agreements boosting adoption rates."
+    },
+    {
+      "rank": 10,
+      "brand": "Trina Solar",
+      "reason": "Solid balance of quality, volume manufacturing, and global reach with competitive pricing."
+    }
+  ],
+  "key_ranking_factors": [
+    "brand recognition in renewable energy sector",
+    "technology innovation and efficiency",
+    "market share and volume of installations",
+    "product warranty and reliability",
+    "customer service and satisfaction",
+    "geographic reach and scalability",
+    "pricing competitiveness",
+    "financial strength and investment",
+    "marketing and digital presence",
+    "partnerships and industry reputation"
+  ],
+  "brand_evaluation": {
+    "brand": "SolaGrid",
+    "appears_in_top_10": false,
+    "rank_if_listed": null,
+    "summary": "SolaGrid is either a niche, emerging, or insufficiently documented player in the solar energy category without strong AI-visible data to place it among top brands. There is limited public information about their market impact, technology, or scale.",
+    "missing_information": [
+      "detailed product specifications and efficiency data",
+      "market share and scale of installation projects",
+      "customer reviews and satisfaction metrics",
+      "company financial health and investment background",
+      "technology innovation and patents",
+      "geographic coverage",
+      "partnerships or collaborations"
+    ],
+    "narrative_strengths": [
+      "Emerging or niche specialization potential",
+      "Possibly innovative technology undisclosed publicly"
+    ],
+    "narrative_weaknesses": [
+      "Lack of visible market presence or recognition",
+      "Insufficient accessible data on product performance",
+      "Limited brand awareness and digital footprint"
+    ]
+  },
+  "improvement_recommendations": [
+    "Enhance digital presence with detailed technical specifications and case studies on installations.",
+    "Gather and publish verified customer testimonials and third-party reviews.",
+    "Increase market visibility through partnerships, industry associations, and renewable energy events.",
+    "Invest in securing and publicizing technology patents or innovations.",
+    "Implement comprehensive marketing campaigns targeting solar energy consumers and enterprises.",
+    "Expand geographic market penetration and document project successes publicly.",
+    "Provide transparent financial and corporate data to build credibility."
+  ]
+}

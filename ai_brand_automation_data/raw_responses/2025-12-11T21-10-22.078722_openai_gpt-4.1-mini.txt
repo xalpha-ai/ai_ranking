@@ -1,0 +1,94 @@
+{
+  "category": "Solar Energy",
+  "top_10": [
+    {
+      "rank": 1,
+      "brand": "Tesla Solar",
+      "reason": "Industry leader with innovative solar technology, strong brand reputation, extensive product ecosystem, and high consumer trust."
+    },
+    {
+      "rank": 2,
+      "brand": "SunPower",
+      "reason": "Known for high-efficiency solar panels, long warranties, and strong market presence with reliable residential and commercial solutions."
+    },
+    {
+      "rank": 3,
+      "brand": "LG Solar",
+      "reason": "High-quality solar panels with excellent efficiency ratings, backed by a globally recognized electronics brand."
+    },
+    {
+      "rank": 4,
+      "brand": "Canadian Solar",
+      "reason": "Strong manufacturing capabilities with a global footprint, balanced efficiency, and competitive pricing."
+    },
+    {
+      "rank": 5,
+      "brand": "First Solar",
+      "reason": "Leading manufacturer of thin-film solar panels, known for durable technology and large-scale utility projects."
+    },
+    {
+      "rank": 6,
+      "brand": "JinkoSolar",
+      "reason": "One of the largest global suppliers with high production capacity and competitive pricing."
+    },
+    {
+      "rank": 7,
+      "brand": "Enphase Energy",
+      "reason": "Specializes in solar microinverters and energy management technology, enhancing solar system efficiency."
+    },
+    {
+      "rank": 8,
+      "brand": "Sunrun",
+      "reason": "Leading residential solar service provider with strong financing options and customer-centric solutions."
+    },
+    {
+      "rank": 9,
+      "brand": "Vivint Solar",
+      "reason": "Focused on residential solar installation and service with significant market share in the U.S."
+    },
+    {
+      "rank": 10,
+      "brand": "Trina Solar",
+      "reason": "Global manufacturer with significant innovation, wide product portfolio, and rapid capacity expansion."
+    }
+  ],
+  "key_ranking_factors": [
+    "technology innovation and efficiency",
+    "brand reputation and consumer trust",
+    "market presence and global footprint",
+    "product reliability and warranty",
+    "pricing competitiveness",
+    "service offerings and customer support",
+    "financial stability and production capacity"
+  ],
+  "brand_evaluation": {
+    "brand": "SolaGrid",
+    "appears_in_top_10": false,
+    "rank_if_listed": null,
+    "summary": "SolaGrid is relatively unknown in mainstream solar energy markets and lacks significant visibility in global or large regional markets. There is limited accessible data regarding their technology, market impact, or customer base which constrains their ranking.",
+    "missing_information": [
+      "Sales volume data",
+      "Market share and geographic presence",
+      "Technology specifications and competitive differentiators",
+      "Warranty and reliability statistics",
+      "Customer reviews and case studies"
+    ],
+    "narrative_strengths": [
+      "Potentially emerging or niche player",
+      "Possibly innovative at a smaller scale or specialized applications"
+    ],
+    "narrative_weaknesses": [
+      "Lack of broad market recognition",
+      "Insufficient publicly available data for evaluation",
+      "Unclear competitive positioning and product quality"
+    ]
+  },
+  "improvement_recommendations": [
+    "Increase transparency and availability of product and performance data to build credibility.",
+    "Invest in marketing to boost brand recognition in target markets.",
+    "Develop and showcase technology innovations with verified efficiency metrics.",
+    "Collect and publish verified customer testimonials and case studies.",
+    "Expand distribution and service networks to improve market footprint.",
+    "Establish strategic partnerships with recognized industry players."
+  ]
+}

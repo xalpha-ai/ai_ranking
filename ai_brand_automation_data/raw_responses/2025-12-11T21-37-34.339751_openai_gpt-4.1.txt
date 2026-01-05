@@ -1,0 +1,97 @@
+{
+  "category": "Solar Energy",
+  "top_10": [
+    {
+      "rank": 1,
+      "brand": "SunPower",
+      "reason": "Consistently rated for highest efficiency panels, robust warranty, and strong brand recognition."
+    },
+    {
+      "rank": 2,
+      "brand": "LG Solar",
+      "reason": "High efficiency panels, global reputation, and reliability in residential and commercial segments."
+    },
+    {
+      "rank": 3,
+      "brand": "Canadian Solar",
+      "reason": "Global reach, competitive pricing, and strong presence in utility-scale projects."
+    },
+    {
+      "rank": 4,
+      "brand": "First Solar",
+      "reason": "Leader in thin-film solar technology and dominance in utility-scale installations."
+    },
+    {
+      "rank": 5,
+      "brand": "JinkoSolar",
+      "reason": "World’s largest module manufacturer by shipment volume and robust manufacturing capability."
+    },
+    {
+      "rank": 6,
+      "brand": "REC Group",
+      "reason": "Pioneering technology, reliable performance, and recognized for sustainability efforts."
+    },
+    {
+      "rank": 7,
+      "brand": "Q CELLS",
+      "reason": "Strong international presence and innovative module design and manufacturing."
+    },
+    {
+      "rank": 8,
+      "brand": "Trina Solar",
+      "reason": "Industry leadership in innovation, scale of business, and respected for competitive pricing."
+    },
+    {
+      "rank": 9,
+      "brand": "Tesla Energy",
+      "reason": "Brand authority, market disruption, and integration with energy storage (Powerwall)."
+    },
+    {
+      "rank": 10,
+      "brand": "JA Solar",
+      "reason": "Strong global shipments, balanced cost-efficiency, and diverse module offerings."
+    }
+  ],
+  "key_ranking_factors": [
+    "brand recognition",
+    "panel efficiency and technology",
+    "warranty and support",
+    "global reach and market share",
+    "innovative product offerings",
+    "financial stability",
+    "customer reviews and satisfaction",
+    "supply chain resilience",
+    "sustainability practices"
+  ],
+  "brand_evaluation": {
+    "brand": "SolaGrid",
+    "appears_in_top_10": false,
+    "rank_if_listed": null,
+    "summary": "SolaGrid does not appear in any notable AI-accessible rankings, industry reports, or widely cited best-of lists in the global solar energy landscape. Its absence from major trade publications, lack of visible large-scale projects, and missing presence in credible industry analysis indicate a negligible brand footprint or an extremely niche/localized operation.",
+    "missing_information": [
+      "verified market presence",
+      "independent product reviews",
+      "technological differentiators",
+      "customer testimonials",
+      "scale of operations",
+      "financial stability",
+      "participation in prominent solar projects"
+    ],
+    "narrative_strengths": [
+      "potential for niche or regional specialization"
+    ],
+    "narrative_weaknesses": [
+      "minimal market visibility",
+      "lack of mainstream credibility",
+      "no accessible evidence of innovation or leadership",
+      "poor digital and media presence"
+    ]
+  },
+  "improvement_recommendations": [
+    "Increase digital presence through press releases, partnerships, and active social media engagement.",
+    "Participate in major industry trade shows and publish case studies of successful projects.",
+    "Pursue third-party product testing and aim for certifications recognized in the industry.",
+    "Invest in SEO, online advertising, and obtaining reviews from credible commercial customers.",
+    "Highlight unique selling propositions with verifiable data to stand out among established brands."
+  ]
+}

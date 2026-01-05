@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Score System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
+        }
+
+        .result.active {
+            display: block;
+        }
+
+        .result h2 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 20px;
+        }
+
+        .markdown-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
+            max-height: 600px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .markdown-content h1 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .markdown-content h2 {
+            font-size: 20px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .markdown-content h3 {
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .markdown-content th,
+        .markdown-content td {
+            border: 1px solid #e1e8ed;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .markdown-content th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .markdown-content li {
+            margin-bottom: 5px;
+        }
+
+        .markdown-content code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+
+        .markdown-content blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #666;
+            font-style: italic;
+        }
+
+        .error {
+            display: none;
+            padding: 15px;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            color: #721c24;
+            margin-bottom: 20px;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        .copy-btn {
+            margin-top: 15px;
+            background: #28a745;
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        .copy-btn:hover:not(:disabled) {
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .pdf-btn {
+            margin-top: 15px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        .pdf-btn:hover:not(:disabled) {
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .export-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
+            text-align: center;
+        }
+
+        .export-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .button-group .btn {
+            flex: 1;
+        }
+
+        .find-competitors-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .find-competitors-btn:hover:not(:disabled) {
+            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .competitors {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
+        }
+
+        .competitors.active {
+            display: block;
+        }
+
+        .competitors h2 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 20px;
+        }
+
+        .competitor-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #e1e8ed;
+        }
+
+        .competitor-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .competitor-name {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .competitor-description {
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .competitor-reason {
+            color: #666;
+            font-size: 13px;
+            font-style: italic;
+            padding-left: 10px;
+            border-left: 3px solid #f5576c;
+        }
+
+        .competitive-analysis-btn {
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+        }
+
+        .competitive-analysis-btn:hover:not(:disabled) {
+            box-shadow: 0 10px 20px rgba(58, 123, 213, 0.4);
+        }
+
+        .ranking-analysis-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #764ba2 100%);
+        }
+
+        .ranking-analysis-btn:hover:not(:disabled) {
+            box-shadow: 0 10px 20px rgba(118, 75, 162, 0.4);
+        }
+
+        .geographic-analysis-btn {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .geographic-analysis-btn:hover:not(:disabled) {
+            box-shadow: 0 10px 20px rgba(67, 233, 123, 0.4);
+        }
+
+        .analysis {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .analysis.active {
+            display: block;
+        }
+
+        .analysis h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .analysis-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #e1e8ed;
+        }
+
+        .analysis-section h3 {
+            margin-bottom: 15px;
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #333;
+        }
+
+        .rank-2 {
+            background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+            color: #333;
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #cd7f32 0%, #daa520 100%);
+            color: white;
+        }
+
+        .rank-other {
+            background: #f8f9fa;
+            color: #666;
+        }
+
+        .score-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .score-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .score-card.better {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+
+        .score-card.worse {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+
+        .score-card-title {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .score-card-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .score-card-diff {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .strength-item, .weakness-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 4px solid;
+        }
+
+        .strength-item {
+            border-left-color: #28a745;
+        }
+
+        .weakness-item {
+            border-left-color: #dc3545;
+        }
+
+        .item-question {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .item-score {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .ranking-table th,
+        .ranking-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .ranking-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .ranking-table tr.target-row {
+            background: #e7f3ff;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h1 style="margin: 0;">AI Visibility Score System</h1>
+                <a href="/dashboard" style="background: white; color: #667eea; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px;">
+                    📊 View Dashboard
+                </a>
+            </div>
+            <p>Generate comprehensive AI visibility reports for any brand</p>
+        </div>
+
+        <div class="content">
+            <div class="error" id="errorMessage"></div>
+
+            <form id="visibilityForm">
+                <div class="form-group">
+                    <label for="brand">Brand Name *</label>
+                    <input type="text" id="brand" name="brand" placeholder="e.g., Kia" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="industry">Industry *</label>
+                    <input type="text" id="industry" name="industry" placeholder="e.g., Auto maker" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Brand Description *</label>
+                    <textarea id="description" name="description" placeholder="Describe your brand, its products, and key features..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="apiKey">OpenAI API Key *</label>
+                    <input type="text" id="apiKey" name="apiKey" placeholder="sk-..." required>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn find-competitors-btn" id="findCompetitorsBtn">Find Competitors</button>
+                    <button type="button" class="btn competitive-analysis-btn" id="competitiveAnalysisBtn">Competitive Analysis</button>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn ranking-analysis-btn" id="rankingAnalysisBtn">Ranking Analysis</button>
+                    <button type="button" class="btn geographic-analysis-btn" id="geographicAnalysisBtn">Geographic Analysis</button>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn" id="submitBtn">Generate Report</button>
+                </div>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p id="loadingText">Generating your visibility report... This may take a few minutes.</p>
+            </div>
+
+            <div class="competitors" id="competitors">
+                <h2>Identified Competitors</h2>
+                <div id="competitorsList"></div>
+            </div>
+
+            <div class="analysis" id="analysis">
+                <h2>Competitive Analysis</h2>
+
+                <div class="analysis-section">
+                    <h3>Overall Ranking</h3>
+                    <div id="rankingContent"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3>Component Comparison</h3>
+                    <div id="componentComparison" class="score-comparison"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3>Your Strengths</h3>
+                    <div id="strengthsList"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3>Areas for Improvement</h3>
+                    <div id="weaknessesList"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3>Detailed Competitor Scores</h3>
+                    <div id="competitorScores"></div>
+                </div>
+            </div>
+
+            <div class="analysis" id="rankingAnalysisDiv">
+                <h2>Ranking Analysis</h2>
+
+                <div class="analysis-section">
+                    <h3>Overall Statistics</h3>
+                    <div id="rankingStats" class="score-comparison"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3>Strong Ranking Areas</h3>
+                    <div id="strongRankings"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3>Weak Ranking Areas</h3>
+                    <div id="weakRankings"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3>Not Mentioned In</h3>
+                    <div id="notMentionedRankings"></div>
+                </div>
+            </div>
+
+            <div class="analysis" id="geographicAnalysisDiv">
+                <h2>Geographic Presence Analysis</h2>
+
+                <div class="analysis-section">
+                    <h3>Overall Geographic Presence</h3>
+                    <div id="geographicStats" class="score-comparison"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3>Country-by-Country Analysis</h3>
+                    <div id="countryResults"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3>Strong Markets</h3>
+                    <div id="strongMarkets"></div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3>Weak Markets</h3>
+                    <div id="weakMarkets"></div>
+                </div>
+            </div>
+
+            <div class="result" id="result">
+                <h2>Visibility Report</h2>
+                <div class="markdown-content" id="reportContent"></div>
+                <button type="button" class="btn copy-btn" id="copyBtn">Copy Report to Clipboard</button>
+            </div>
+
+            <div class="export-section" id="exportSection" style="display: none;">
+                <h3>Export Complete Report</h3>
+                <p>Generate a comprehensive PDF report including all analysis results</p>
+                <button type="button" class="btn pdf-btn" id="exportPdfBtn">📄 Export All Results to PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const form = document.getElementById('visibilityForm');
+        const loading = document.getElementById('loading');
+        const loadingText = document.getElementById('loadingText');
+        const result = document.getElementById('result');
+        const reportContent = document.getElementById('reportContent');
+        const errorMessage = document.getElementById('errorMessage');
+        const submitBtn = document.getElementById('submitBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const findCompetitorsBtn = document.getElementById('findCompetitorsBtn');
+        const competitiveAnalysisBtn = document.getElementById('competitiveAnalysisBtn');
+        const rankingAnalysisBtn = document.getElementById('rankingAnalysisBtn');
+        const geographicAnalysisBtn = document.getElementById('geographicAnalysisBtn');
+        const competitorsDiv = document.getElementById('competitors');
+        const competitorsList = document.getElementById('competitorsList');
+        const analysisDiv = document.getElementById('analysis');
+        const rankingContent = document.getElementById('rankingContent');
+        const componentComparison = document.getElementById('componentComparison');
+        const strengthsList = document.getElementById('strengthsList');
+        const weaknessesList = document.getElementById('weaknessesList');
+        const competitorScores = document.getElementById('competitorScores');
+        const rankingAnalysisDiv = document.getElementById('rankingAnalysisDiv');
+        const rankingStats = document.getElementById('rankingStats');
+        const strongRankings = document.getElementById('strongRankings');
+        const weakRankings = document.getElementById('weakRankings');
+        const notMentionedRankings = document.getElementById('notMentionedRankings');
+        const geographicAnalysisDiv = document.getElementById('geographicAnalysisDiv');
+        const geographicStats = document.getElementById('geographicStats');
+        const countryResults = document.getElementById('countryResults');
+        const strongMarkets = document.getElementById('strongMarkets');
+        const weakMarkets = document.getElementById('weakMarkets');
+        const exportSection = document.getElementById('exportSection');
+        const exportPdfBtn = document.getElementById('exportPdfBtn');
+
+        let rawMarkdown = '';
+
+        // Store all analysis results for PDF export
+        let allResults = {
+            brand: '',
+            industry: '',
+            visibility_result: null,
+            competitive_result: null,
+            ranking_result: null,
+            geographic_result: null
+        };
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Hide previous results and errors
+            result.classList.remove('active');
+            errorMessage.classList.remove('active');
+
+            // Get form data
+            const formData = {
+                brand: document.getElementById('brand').value,
+                industry: document.getElementById('industry').value,
+                description: document.getElementById('description').value,
+                api_key: document.getElementById('apiKey').value
+            };
+
+            // Store brand and industry for PDF export
+            allResults.brand = formData.brand;
+            allResults.industry = formData.industry;
+
+            // Show loading
+            loading.classList.add('active');
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/generate-report', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to generate report');
+                }
+
+                // Store the full result for PDF export
+                allResults.visibility_result = data;
+
+                // Store raw markdown and display it
+                rawMarkdown = data.report;
+                reportContent.innerHTML = marked.parse(rawMarkdown);
+                result.classList.add('active');
+
+                // Show export section
+                exportSection.style.display = 'block';
+
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.add('active');
+            } finally {
+                loading.classList.remove('active');
+                submitBtn.disabled = false;
+            }
+        });
+
+        findCompetitorsBtn.addEventListener('click', async () => {
+            // Hide previous results and errors
+            competitorsDiv.classList.remove('active');
+            errorMessage.classList.remove('active');
+
+            // Validate form fields
+            const brand = document.getElementById('brand').value;
+            const industry = document.getElementById('industry').value;
+            const description = document.getElementById('description').value;
+            const apiKey = document.getElementById('apiKey').value;
+
+            if (!brand || !industry || !description || !apiKey) {
+                errorMessage.textContent = 'Please fill in all fields before finding competitors';
+                errorMessage.classList.add('active');
+                return;
+            }
+
+            // Get form data
+            const formData = {
+                brand: brand,
+                industry: industry,
+                description: description,
+                api_key: apiKey,
+                num_competitors: 5
+            };
+
+            // Show loading
+            loadingText.textContent = 'Finding competitors... This may take a moment.';
+            loading.classList.add('active');
+            findCompetitorsBtn.disabled = true;
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/find-competitors', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to find competitors');
+                }
+
+                // Display competitors
+                if (data.competitors && data.competitors.length > 0) {
+                    competitorsList.innerHTML = data.competitors.map(comp => `
+                        <div class="competitor-card">
+                            <div class="competitor-name">${comp.name}</div>
+                            <div class="competitor-description">${comp.description}</div>
+                            <div class="competitor-reason">Why competitor: ${comp.competitive_reason}</div>
+                        </div>
+                    `).join('');
+                    competitorsDiv.classList.add('active');
+                } else {
+                    errorMessage.textContent = 'No competitors found';
+                    errorMessage.classList.add('active');
+                }
+
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.add('active');
+            } finally {
+                loading.classList.remove('active');
+                loadingText.textContent = 'Generating your visibility report... This may take a few minutes.';
+                findCompetitorsBtn.disabled = false;
+                submitBtn.disabled = false;
+            }
+        });
+
+        competitiveAnalysisBtn.addEventListener('click', async () => {
+            // Hide previous results and errors
+            analysisDiv.classList.remove('active');
+            errorMessage.classList.remove('active');
+
+            // Validate form fields
+            const brand = document.getElementById('brand').value;
+            const industry = document.getElementById('industry').value;
+            const description = document.getElementById('description').value;
+            const apiKey = document.getElementById('apiKey').value;
+
+            if (!brand || !industry || !description || !apiKey) {
+                errorMessage.textContent = 'Please fill in all fields before running competitive analysis';
+                errorMessage.classList.add('active');
+                return;
+            }
+
+            // Get form data
+            const formData = {
+                brand: brand,
+                industry: industry,
+                description: description,
+                api_key: apiKey,
+                num_competitors: 3
+            };
+
+            // Show loading
+            loadingText.textContent = 'Running competitive analysis... This will take several minutes as we analyze your brand and competitors.';
+            loading.classList.add('active');
+            competitiveAnalysisBtn.disabled = true;
+            findCompetitorsBtn.disabled = true;
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/competitive-analysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to run competitive analysis');
+                }
+
+                // Store results for PDF export
+                allResults.brand = brand;
+                allResults.industry = industry;
+                allResults.competitive_result = data;
+
+                // Display analysis results
+                displayCompetitiveAnalysis(data, brand);
+                analysisDiv.classList.add('active');
+
+                // Show export section
+                exportSection.style.display = 'block';
+
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.add('active');
+            } finally {
+                loading.classList.remove('active');
+                loadingText.textContent = 'Generating your visibility report... This may take a few minutes.';
+                competitiveAnalysisBtn.disabled = false;
+                findCompetitorsBtn.disabled = false;
+                submitBtn.disabled = false;
+            }
+        });
+
+        function displayCompetitiveAnalysis(data, brandName) {
+            const analysis = data.analysis;
+            const target = data.target;
+            const competitors = data.competitors;
+
+            // Display ranking
+            const rankClass = analysis.overall_rank === 1 ? 'rank-1' :
+                            analysis.overall_rank === 2 ? 'rank-2' :
+                            analysis.overall_rank === 3 ? 'rank-3' : 'rank-other';
+
+            rankingContent.innerHTML = `
+                <div class="rank-badge ${rankClass}">
+                    Rank ${analysis.overall_rank} of ${analysis.total_brands}
+                </div>
+                <p style="font-size: 16px; margin-bottom: 15px;">
+                    <strong>${brandName}</strong> scores <strong>${analysis.target_score}</strong> vs competitor average of <strong>${analysis.competitor_avg_score}</strong>
+                    (${analysis.score_difference > 0 ? '+' : ''}${analysis.score_difference} points)
+                </p>
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Brand</th>
+                            <th>Visibility Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${analysis.ranking.map((item, idx) => `
+                            <tr class="${item.is_target ? 'target-row' : ''}">
+                                <td>#${idx + 1}</td>
+                                <td>${item.name}${item.is_target ? ' (You)' : ''}</td>
+                                <td>${item.score}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            // Display component comparison
+            componentComparison.innerHTML = Object.entries(analysis.component_comparison).map(([component, data]) => `
+                <div class="score-card ${data.better ? 'better' : 'worse'}">
+                    <div class="score-card-title">${component}</div>
+                    <div class="score-card-value">${data.target}</div>
+                    <div class="score-card-diff">
+                        vs ${data.competitor_avg} avg
+                        <br>
+                        (${data.difference > 0 ? '+' : ''}${data.difference})
+                    </div>
+                </div>
+            `).join('');
+
+            // Display strengths
+            if (analysis.strengths && analysis.strengths.length > 0) {
+                strengthsList.innerHTML = analysis.strengths.map(strength => `
+                    <div class="strength-item">
+                        <div class="item-question">${strength.question}</div>
+                        <div class="item-score">Score: ${strength.score}/100 | Presence: ${(strength.presence * 100).toFixed(0)}% | Prominence: ${(strength.prominence * 100).toFixed(0)}% | Narrative: ${(strength.narrative * 100).toFixed(0)}%</div>
+                    </div>
+                `).join('');
+            } else {
+                strengthsList.innerHTML = '<p>No significant strengths identified. Focus on improving overall visibility.</p>';
+            }
+
+            // Display weaknesses
+            if (analysis.weaknesses && analysis.weaknesses.length > 0) {
+                weaknessesList.innerHTML = analysis.weaknesses.map(weakness => `
+                    <div class="weakness-item">
+                        <div class="item-question">${weakness.question}</div>
+                        <div class="item-score">Score: ${weakness.score}/100 | Presence: ${(weakness.presence * 100).toFixed(0)}% | Prominence: ${(weakness.prominence * 100).toFixed(0)}% | Narrative: ${(weakness.narrative * 100).toFixed(0)}%</div>
+                    </div>
+                `).join('');
+            } else {
+                weaknessesList.innerHTML = '<p>No significant weaknesses identified. Great job!</p>';
+            }
+
+            // Display competitor scores
+            competitorScores.innerHTML = `
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>Competitor</th>
+                            <th>Overall Score</th>
+                            <th>Presence</th>
+                            <th>Prominence</th>
+                            <th>Narrative</th>
+                            <th>Authority</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${competitors.map(comp => `
+                            <tr>
+                                <td>${comp.name}</td>
+                                <td><strong>${comp.visibility.visibility_score}</strong></td>
+                                <td>${comp.visibility.component_scores.presence}</td>
+                                <td>${comp.visibility.component_scores.prominence}</td>
+                                <td>${comp.visibility.component_scores.narrative}</td>
+                                <td>${comp.visibility.component_scores.authority}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        rankingAnalysisBtn.addEventListener('click', async () => {
+            // Hide previous results and errors
+            rankingAnalysisDiv.classList.remove('active');
+            errorMessage.classList.remove('active');
+
+            // Validate form fields
+            const brand = document.getElementById('brand').value;
+            const industry = document.getElementById('industry').value;
+            const description = document.getElementById('description').value;
+            const apiKey = document.getElementById('apiKey').value;
+
+            if (!brand || !industry || !description || !apiKey) {
+                errorMessage.textContent = 'Please fill in all fields before running ranking analysis';
+                errorMessage.classList.add('active');
+                return;
+            }
+
+            const formData = {
+                brand: brand,
+                industry: industry,
+                description: description,
+                api_key: apiKey,
+                num_prompts: 10
+            };
+
+            loadingText.textContent = 'Running ranking analysis... Testing brand performance across multiple ranking queries.';
+            loading.classList.add('active');
+            rankingAnalysisBtn.disabled = true;
+            findCompetitorsBtn.disabled = true;
+            competitiveAnalysisBtn.disabled = true;
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/ranking-analysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to run ranking analysis');
+                }
+
+                // Store results for PDF export
+                allResults.brand = brand;
+                allResults.industry = industry;
+                allResults.ranking_result = data;
+
+                displayRankingAnalysis(data, brand);
+                rankingAnalysisDiv.classList.add('active');
+
+                // Show export section
+                exportSection.style.display = 'block';
+
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.add('active');
+            } finally {
+                loading.classList.remove('active');
+                loadingText.textContent = 'Generating your visibility report... This may take a few minutes.';
+                rankingAnalysisBtn.disabled = false;
+                findCompetitorsBtn.disabled = false;
+                competitiveAnalysisBtn.disabled = false;
+                submitBtn.disabled = false;
+            }
+        });
+
+        function displayRankingAnalysis(data, brandName) {
+            // Display statistics
+            rankingStats.innerHTML = `
+                <div class="score-card ${data.mention_rate >= 70 ? 'better' : 'worse'}">
+                    <div class="score-card-title">Mention Rate</div>
+                    <div class="score-card-value">${data.mention_rate}%</div>
+                    <div class="score-card-diff">${data.mentioned_count}/${data.total_prompts} prompts</div>
+                </div>
+                <div class="score-card">
+                    <div class="score-card-title">Avg Position</div>
+                    <div class="score-card-value">${data.average_position !== null ? data.average_position : 'N/A'}</div>
+                    <div class="score-card-diff">when mentioned</div>
+                </div>
+                <div class="score-card ${data.top_3_count >= 3 ? 'better' : ''}">
+                    <div class="score-card-title">Top 3</div>
+                    <div class="score-card-value">${data.top_3_count}</div>
+                    <div class="score-card-diff">${Math.round(data.top_3_count / Math.max(data.total_prompts, 1) * 100)}% of queries</div>
+                </div>
+                <div class="score-card ${data.top_5_count >= 5 ? 'better' : ''}">
+                    <div class="score-card-title">Top 5</div>
+                    <div class="score-card-value">${data.top_5_count}</div>
+                    <div class="score-card-diff">${Math.round(data.top_5_count / Math.max(data.total_prompts, 1) * 100)}% of queries</div>
+                </div>
+            `;
+
+            // Display strong areas
+            if (data.strong_areas && data.strong_areas.length > 0) {
+                strongRankings.innerHTML = data.strong_areas.map(item => `
+                    <div class="strength-item">
+                        <div class="item-question">${item.prompt}</div>
+                        <div class="item-score">Position: #${item.position || 'Unknown'} ${item.in_top_3 ? '🏆' : item.in_top_5 ? '⭐' : ''}</div>
+                    </div>
+                `).join('');
+            } else {
+                strongRankings.innerHTML = '<p>No strong ranking positions identified. Work on improving brand visibility in top rankings.</p>';
+            }
+
+            // Display weak areas
+            if (data.weak_areas && data.weak_areas.length > 0) {
+                weakRankings.innerHTML = data.weak_areas.map(item => `
+                    <div class="weakness-item">
+                        <div class="item-question">${item.prompt}</div>
+                        <div class="item-score">Position: #${item.position || 'Low/Unknown'}</div>
+                    </div>
+                `).join('');
+            } else {
+                weakRankings.innerHTML = '<p>No weak areas identified.</p>';
+            }
+
+            // Display not mentioned
+            if (data.not_mentioned && data.not_mentioned.length > 0) {
+                notMentionedRankings.innerHTML = data.not_mentioned.map(item => `
+                    <div class="weakness-item">
+                        <div class="item-question">${item.prompt}</div>
+                        <div class="item-score">❌ Brand not mentioned in response</div>
+                    </div>
+                `).join('');
+            } else {
+                notMentionedRankings.innerHTML = '<p>Great! Your brand was mentioned in all ranking queries.</p>';
+            }
+        }
+
+        geographicAnalysisBtn.addEventListener('click', async () => {
+            // Hide previous results and errors
+            geographicAnalysisDiv.classList.remove('active');
+            errorMessage.classList.remove('active');
+
+            // Validate form fields
+            const brand = document.getElementById('brand').value;
+            const industry = document.getElementById('industry').value;
+            const description = document.getElementById('description').value;
+            const apiKey = document.getElementById('apiKey').value;
+
+            if (!brand || !industry || !description || !apiKey) {
+                errorMessage.textContent = 'Please fill in all fields before running geographic analysis';
+                errorMessage.classList.add('active');
+                return;
+            }
+
+            const formData = {
+                brand: brand,
+                industry: industry,
+                description: description,
+                api_key: apiKey,
+                num_countries: 5,
+                questions_per_country: 5
+            };
+
+            loadingText.textContent = 'Running geographic analysis... Analyzing brand presence across top markets.';
+            loading.classList.add('active');
+            geographicAnalysisBtn.disabled = true;
+            findCompetitorsBtn.disabled = true;
+            competitiveAnalysisBtn.disabled = true;
+            rankingAnalysisBtn.disabled = true;
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/geographic-analysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to run geographic analysis');
+                }
+
+                // Store results for PDF export
+                allResults.brand = brand;
+                allResults.industry = industry;
+                allResults.geographic_result = data;
+
+                displayGeographicAnalysis(data, brand);
+                geographicAnalysisDiv.classList.add('active');
+
+                // Show export section
+                exportSection.style.display = 'block';
+
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.add('active');
+            } finally {
+                loading.classList.remove('active');
+                loadingText.textContent = 'Generating your visibility report... This may take a few minutes.';
+                geographicAnalysisBtn.disabled = false;
+                findCompetitorsBtn.disabled = false;
+                competitiveAnalysisBtn.disabled = false;
+                rankingAnalysisBtn.disabled = false;
+                submitBtn.disabled = false;
+            }
+        });
+
+        function displayGeographicAnalysis(data, brandName) {
+            // Display overall statistics
+            geographicStats.innerHTML = `
+                <div class="score-card ${data.average_presence_score >= 60 ? 'better' : 'worse'}">
+                    <div class="score-card-title">Avg Presence Score</div>
+                    <div class="score-card-value">${data.average_presence_score}%</div>
+                    <div class="score-card-diff">across ${data.num_countries_analyzed} countries</div>
+                </div>
+                <div class="score-card ${data.strong_markets.length >= 3 ? 'better' : ''}">
+                    <div class="score-card-title">Strong Markets</div>
+                    <div class="score-card-value">${data.strong_markets.length}</div>
+                    <div class="score-card-diff">presence ≥ 60%</div>
+                </div>
+                <div class="score-card ${data.weak_markets.length === 0 ? 'better' : 'worse'}">
+                    <div class="score-card-title">Weak Markets</div>
+                    <div class="score-card-value">${data.weak_markets.length}</div>
+                    <div class="score-card-diff">presence < 40%</div>
+                </div>
+            `;
+
+            // Display country-by-country results
+            if (data.country_results && data.country_results.length > 0) {
+                countryResults.innerHTML = data.country_results.map(country => {
+                    const scoreClass = country.presence_score >= 60 ? 'better' :
+                                      country.presence_score < 40 ? 'worse' : '';
+                    return `
+                        <div class="strength-item" style="border-left-color: ${country.presence_score >= 60 ? '#28a745' : country.presence_score < 40 ? '#dc3545' : '#667eea'}">
+                            <div class="item-question">
+                                <strong>${country.country}</strong> - Presence Score: <span style="font-size: 18px; color: ${country.presence_score >= 60 ? '#28a745' : country.presence_score < 40 ? '#dc3545' : '#667eea'}">${country.presence_score}%</span>
+                            </div>
+                            <div class="item-score">
+                                ${country.mentions}/${country.total_questions} mentions | Market: ${country.market_info}
+                            </div>
+                            <div style="margin-top: 8px; font-size: 13px; color: #666; font-style: italic;">
+                                ${country.importance}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                countryResults.innerHTML = '<p>No country data available.</p>';
+            }
+
+            // Display strong markets
+            if (data.strong_markets && data.strong_markets.length > 0) {
+                strongMarkets.innerHTML = data.strong_markets.map(country => `
+                    <div class="strength-item">
+                        <div class="item-question">${country.country}</div>
+                        <div class="item-score">
+                            Presence Score: ${country.presence_score}% (${country.mentions}/${country.total_questions} mentions)
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                strongMarkets.innerHTML = '<p>No strong markets identified. Focus on improving geographic presence.</p>';
+            }
+
+            // Display weak markets
+            if (data.weak_markets && data.weak_markets.length > 0) {
+                weakMarkets.innerHTML = data.weak_markets.map(country => `
+                    <div class="weakness-item">
+                        <div class="item-question">${country.country}</div>
+                        <div class="item-score">
+                            Presence Score: ${country.presence_score}% (${country.mentions}/${country.total_questions} mentions)
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                weakMarkets.innerHTML = '<p>No weak markets identified. Great geographic coverage!</p>';
+            }
+        }
+
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(rawMarkdown).then(() => {
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            });
+        });
+
+        exportPdfBtn.addEventListener('click', async () => {
+            if (!allResults.brand || !allResults.industry) {
+                errorMessage.textContent = 'Please run at least one analysis before exporting to PDF';
+                errorMessage.classList.add('active');
+                return;
+            }
+
+            const originalText = exportPdfBtn.textContent;
+            exportPdfBtn.textContent = 'Generating PDF...';
+            exportPdfBtn.disabled = true;
+
+            try {
+                const response = await fetch('/generate-pdf', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(allResults)
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Failed to generate PDF');
+                }
+
+                // Download the PDF
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `AI_Visibility_Report_${allResults.brand.replace(' ', '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+                exportPdfBtn.textContent = '✓ PDF Downloaded!';
+                setTimeout(() => {
+                    exportPdfBtn.textContent = originalText;
+                }, 3000);
+
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.add('active');
+                exportPdfBtn.textContent = originalText;
+            } finally {
+                exportPdfBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

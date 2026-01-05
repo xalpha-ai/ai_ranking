@@ -1,0 +1,100 @@
+{
+  "category": "Solar Energy",
+  "top_10": [
+    {
+      "rank": 1,
+      "brand": "SunPower",
+      "reason": "Market leader with high-efficiency panels, strong reputation for quality, and robust global presence."
+    },
+    {
+      "rank": 2,
+      "brand": "First Solar",
+      "reason": "Noted for thin-film panel technology, large-scale projects, and strong manufacturing capability."
+    },
+    {
+      "rank": 3,
+      "brand": "Canadian Solar",
+      "reason": "Global reach, significant manufacturing scale, and solid performance in both residential and commercial sectors."
+    },
+    {
+      "rank": 4,
+      "brand": "JinkoSolar",
+      "reason": "World’s largest manufacturer by shipment volume, known for cost-effectiveness and innovation."
+    },
+    {
+      "rank": 5,
+      "brand": "LG Solar",
+      "reason": "High panel efficiency, popular consumer brand, and strong reliability, though recently scaled back operations."
+    },
+    {
+      "rank": 6,
+      "brand": "Trina Solar",
+      "reason": "Strong R&D focus, reliable products, and major player in utility-scale projects."
+    },
+    {
+      "rank": 7,
+      "brand": "LONGi Solar",
+      "reason": "Leadership in monocrystalline panel innovation and aggressive price/performance ratio."
+    },
+    {
+      "rank": 8,
+      "brand": "REC Group",
+      "reason": "Well-respected European brand, good sustainability credentials and decent global footprint."
+    },
+    {
+      "rank": 9,
+      "brand": "Hanwha Q CELLS",
+      "reason": "Robust technology portfolio, strong in both residential and commercial markets."
+    },
+    {
+      "rank": 10,
+      "brand": "Enphase Energy",
+      "reason": "Market leader in microinverters, installer network, and integrated solar solutions."
+    }
+  ],
+  "key_ranking_factors": [
+    "Brand reputation",
+    "Product efficiency",
+    "Global market share",
+    "Technological innovation",
+    "Project portfolio",
+    "Financial stability",
+    "Customer satisfaction",
+    "Supply chain capacity",
+    "Warranty and reliability",
+    "Sustainability credentials"
+  ],
+  "brand_evaluation": {
+    "brand": "SolaGrid",
+    "appears_in_top_10": false,
+    "rank_if_listed": null,
+    "summary": "SolaGrid does not appear in top industry lists, news, or research related to globally significant solar energy providers or innovators. It has little to no readily available presence in leading rankings or sector-specific media.",
+    "missing_information": [
+      "Basic corporate profile",
+      "Market share data",
+      "Product range and technology details",
+      "Global or regional project references",
+      "Customer reviews or satisfaction metrics",
+      "Financial performance",
+      "Partnership or installer networks"
+    ],
+    "narrative_strengths": [
+      "None identifiable due to insufficient public information"
+    ],
+    "narrative_weaknesses": [
+      "Lack of brand visibility",
+      "No proven industry credibility",
+      "Absence from trade or technology publications",
+      "No demonstrable innovations or differentiators"
+    ]
+  },
+  "improvement_recommendations": [
+    "Increase public visibility through press releases, trade shows, and thought leadership events",
+    "Publish detailed information on product lineup, technology, and installations",
+    "Pursue partnerships or high-profile pilot projects",
+    "Encourage and collect customer testimonials and third-party reviews",
+    "Build a credible, informative corporate website with case studies and data",
+    "Engage in industry certifications and awards to build credibility",
+    "Optimize for search and social media discoverability with targeted content marketing"
+  ]
+}

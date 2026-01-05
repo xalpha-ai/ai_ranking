@@ -1,0 +1,84 @@
+{
+  "category": "Solar energy",
+  "top_10": [
+    {
+      "rank": 1,
+      "brand": "Tesla Energy",
+      "reason": "Innovative technology and strong market presence."
+    },
+    {
+      "rank": 2,
+      "brand": "First Solar",
+      "reason": "Leading thin-film solar panel provider with extensive experience."
+    },
+    {
+      "rank": 3,
+      "brand": "SunPower",
+      "reason": "High-efficiency solar panels with robust warranty offerings."
+    },
+    {
+      "rank": 4,
+      "brand": "Canadian Solar",
+      "reason": "Global reach with reliable and affordable solutions."
+    },
+    {
+      "rank": 5,
+      "brand": "JinkoSolar",
+      "reason": "Largest manufacturer with diverse product range."
+    },
+    {
+      "rank": 6,
+      "brand": "Enphase Energy",
+      "reason": "Innovative microinverter technology with system flexibility."
+    },
+    {
+      "rank": 7,
+      "brand": "LG Solar",
+      "reason": "Premium solar panels with strong brand trust."
+    },
+    {
+      "rank": 8,
+      "brand": "Trina Solar",
+      "reason": "High-performance panels with competitive pricing."
+    },
+    {
+      "rank": 9,
+      "brand": "Risen Energy",
+      "reason": "Strong growth and competitive production capabilities."
+    },
+    {
+      "rank": 10,
+      "brand": "LONGi Solar",
+      "reason": "Leader in monocrystalline solar module manufacturing."
+    }
+  ],
+  "key_ranking_factors": [
+    "innovation",
+    "market presence",
+    "product efficiency",
+    "global reach",
+    "brand reputation"
+  ],
+  "brand_evaluation": {
+    "brand": "SolaGrid",
+    "appears_in_top_10": false,
+    "rank_if_listed": null,
+    "summary": "SolaGrid does not have enough recognition or market presence to appear in top rankings.",
+    "missing_information": [
+      "Market share data",
+      "Product offerings",
+      "Technological innovations"
+    ],
+    "narrative_strengths": [
+      "Potential for growth in niche markets."
+    ],
+    "narrative_weaknesses": [
+      "Lack of visibility and brand recognition."
+    ]
+  },
+  "improvement_recommendations": [
+    "Increase market presence through strategic partnerships.",
+    "Enhance product offerings with innovative solutions.",
+    "Invest in marketing campaigns to boost brand recognition."
+  ]
+}
