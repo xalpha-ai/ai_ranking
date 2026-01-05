@@ -27,12 +27,31 @@ load_dotenv()
 
 app = Flask(__name__)
 
+# Global error handlers to ensure JSON responses
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({'error': 'Endpoint not found'}), 404
+
+@app.errorhandler(500)
+def internal_error(e):
+    return jsonify({'error': 'Internal server error', 'message': str(e)}), 500
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # Log the error
+    print(f"Unhandled exception: {e}")
+    import traceback
+    traceback.print_exc()
+    return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
+
 # Initialize database on startup
 try:
     init_db()
     print("✓ Database initialized successfully")
 except Exception as e:
     print(f"⚠ Database initialization warning: {e}")
+    import traceback
+    traceback.print_exc()
 
 # Core Data Structures
 @dataclass
@@ -1437,12 +1456,14 @@ def competitive_analysis():
             num_competitors=num_competitors,
         )
 
-        # Save to database
+        # Save to database (non-blocking - don't fail if DB save fails)
         try:
             save_competitive_analysis(brand, industry, result)
             print(f"✓ Saved competitive analysis for {brand}")
         except Exception as db_error:
             print(f"⚠ Failed to save to database: {db_error}")
+            import traceback
+            traceback.print_exc()
 
         return jsonify(result)
 
@@ -1483,12 +1504,14 @@ def ranking_analysis():
             num_prompts=num_prompts,
         )
 
-        # Save to database
+        # Save to database (non-blocking - don't fail if DB save fails)
         try:
             save_ranking_analysis(brand, industry, result)
             print(f"✓ Saved ranking analysis for {brand}")
         except Exception as db_error:
             print(f"⚠ Failed to save to database: {db_error}")
+            import traceback
+            traceback.print_exc()
 
         return jsonify(result)
 
@@ -1531,12 +1554,14 @@ def geographic_analysis():
             questions_per_country=questions_per_country,
         )
 
-        # Save to database
+        # Save to database (non-blocking - don't fail if DB save fails)
         try:
             save_geographic_score(brand, industry, result)
             print(f"✓ Saved geographic analysis for {brand}")
         except Exception as db_error:
             print(f"⚠ Failed to save to database: {db_error}")
+            import traceback
+            traceback.print_exc()
 
         return jsonify(result)
 
@@ -1547,36 +1572,49 @@ def geographic_analysis():
 @app.route('/generate-report', methods=['POST'])
 def generate_report():
     try:
+        print("=== Generate Report Request ===")
         data = request.json
         brand = data.get('brand')
         industry = data.get('industry')
         description = data.get('description')
         api_key = data.get('api_key')
 
+        print(f"Brand: {brand}, Industry: {industry}")
+
         if not all([brand, industry, description, api_key]):
             return jsonify({'error': 'All fields are required'}), 400
 
         # Run the visibility audit
+        print("Running visibility audit...")
         result = run_visibility_audit_for_brand(
             brand=brand,
             industry=industry,
             brand_description=description,
             api_key=api_key,
         )
+        print("✓ Visibility audit completed")
 
-        # Save to database
+        # Save to database (non-blocking - don't fail if DB save fails)
         try:
             save_visibility_score(brand, industry, result)
             print(f"✓ Saved visibility score for {brand}")
         except Exception as db_error:
             print(f"⚠ Failed to save to database: {db_error}")
+            import traceback
+            traceback.print_exc()
+            # Continue anyway - don't fail the request
 
         # Generate markdown report
+        print("Generating markdown report...")
         report_md = generate_visibility_report_markdown(result)
+        print("✓ Report generated")
 
         return jsonify({'report': report_md})
 
     except Exception as e:
+        print(f"ERROR in generate_report: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 
