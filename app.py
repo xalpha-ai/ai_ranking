@@ -555,6 +555,7 @@ def extract_brand_ranking(
     brand_aliases: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """Extract where the brand appears in a ranking response."""
+    import re  # Import at function level, not inside conditional
 
     variants = [brand] + (brand_aliases or [])
     normalized_variants = [_normalize(v) for v in variants]
@@ -574,7 +575,6 @@ def extract_brand_ranking(
             mentioned = True
             # Try to extract position number
             # Look for patterns like "1.", "#1", "1)", "Top 1:", etc.
-            import re
             patterns = [
                 r'^\s*(\d+)[\.\)\:]',  # 1. or 1) or 1:
                 r'#(\d+)',              # #1
