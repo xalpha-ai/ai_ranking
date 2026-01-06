@@ -160,18 +160,43 @@ def get_session():
         raise
 
 
+def _make_json_serializable(obj):
+    """Recursively convert objects to JSON-serializable format"""
+    import json
+    from dataclasses import is_dataclass, asdict
+
+    if obj is None:
+        return None
+    elif isinstance(obj, (str, int, float, bool)):
+        return obj
+    elif isinstance(obj, dict):
+        return {key: _make_json_serializable(value) for key, value in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [_make_json_serializable(item) for item in obj]
+    elif is_dataclass(obj):
+        # Convert dataclass to dict
+        return _make_json_serializable(asdict(obj))
+    else:
+        # For other objects, try to convert to string or skip
+        try:
+            json.dumps(obj)
+            return obj
+        except (TypeError, ValueError):
+            return str(obj)
+
+
 def save_visibility_score(brand_name, industry, result):
     """Save visibility score to database"""
     session = get_session()
     try:
+        import json
         vis = result['visibility']
 
         # Convert result to JSON-serializable format (remove non-serializable objects)
-        import json
-        serializable_result = {
+        serializable_result = _make_json_serializable({
             'visibility': vis,
             'raw_responses': result.get('raw_responses', [])
-        }
+        })
 
         # Test if it's serializable
         json.dumps(serializable_result)
@@ -209,11 +234,11 @@ def save_competitive_analysis(brand_name, industry, result):
         import json
         analysis = result['analysis']
 
-        # Create JSON-serializable copy (remove config objects if present)
-        serializable_result = {
+        # Create JSON-serializable copy (recursively clean all BrandConfig and other objects)
+        serializable_result = _make_json_serializable({
             'analysis': analysis,
             'competitors': result.get('competitors', [])
-        }
+        })
 
         # Test serialization
         json.dumps(serializable_result)
@@ -249,7 +274,7 @@ def save_ranking_analysis(brand_name, industry, result):
         import json
 
         # Create JSON-serializable copy
-        serializable_result = {
+        serializable_result = _make_json_serializable({
             'total_prompts': result['total_prompts'],
             'mentioned_count': result['mentioned_count'],
             'mention_rate': result['mention_rate'],
@@ -257,7 +282,7 @@ def save_ranking_analysis(brand_name, industry, result):
             'top_3_count': result['top_3_count'],
             'top_5_count': result['top_5_count'],
             'all_results': result.get('all_results', [])
-        }
+        })
 
         # Test serialization
         json.dumps(serializable_result)
@@ -294,13 +319,13 @@ def save_geographic_score(brand_name, industry, result):
         import json
 
         # Create JSON-serializable copy
-        serializable_result = {
+        serializable_result = _make_json_serializable({
             'num_countries_analyzed': result['num_countries_analyzed'],
             'average_presence_score': result['average_presence_score'],
             'strong_markets': result['strong_markets'],
             'weak_markets': result['weak_markets'],
             'country_results': result.get('country_results', [])
-        }
+        })
 
         # Test serialization
         json.dumps(serializable_result)
