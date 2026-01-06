@@ -378,7 +378,7 @@ def run_visibility_audit_for_brand(
     scoring_model: str = "gpt-4o-mini",
     answering_model: str = "gpt-4o-mini",
 ) -> Dict[str, Any]:
-    client = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=api_key, timeout=240.0)  # 4 minute timeout for API calls
 
     config = generate_brand_config_via_ai(
         brand=brand,
@@ -763,7 +763,7 @@ def run_competitive_analysis(
 ) -> Dict[str, Any]:
     """Run visibility analysis for target brand and competitors, then compare."""
 
-    client = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=api_key, timeout=240.0)  # 4 minute timeout for API calls
 
     # Step 1: Identify competitors
     competitors = identify_competitors(
@@ -958,7 +958,7 @@ def calculate_geographic_presence(
 ) -> Dict[str, Any]:
     """Calculate presence scores for the brand across top countries."""
 
-    client = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=api_key, timeout=240.0)  # 4 minute timeout for API calls
 
     # Step 1: Identify top countries for the industry
     top_countries = identify_top_countries(
@@ -1435,7 +1435,7 @@ def find_competitors():
         if not all([brand, industry, description, api_key]):
             return jsonify({'error': 'All fields are required'}), 400
 
-        client = OpenAI(api_key=api_key)
+        client = OpenAI(api_key=api_key, timeout=240.0)  # 4 minute timeout for API calls
 
         # Identify competitors
         competitors = identify_competitors(
@@ -1502,7 +1502,7 @@ def ranking_analysis():
         if not all([brand, industry, description, api_key]):
             return jsonify({'error': 'All fields are required'}), 400
 
-        client = OpenAI(api_key=api_key)
+        client = OpenAI(api_key=api_key, timeout=240.0)  # 4 minute timeout for API calls
 
         # Get brand config to extract aliases
         config = generate_brand_config_via_ai(
@@ -1551,7 +1551,7 @@ def geographic_analysis():
         if not all([brand, industry, description, api_key]):
             return jsonify({'error': 'All fields are required'}), 400
 
-        client = OpenAI(api_key=api_key)
+        client = OpenAI(api_key=api_key, timeout=240.0)  # 4 minute timeout for API calls
 
         # Get brand config to extract aliases
         config = generate_brand_config_via_ai(
