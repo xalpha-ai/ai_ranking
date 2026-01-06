@@ -165,6 +165,17 @@ def save_visibility_score(brand_name, industry, result):
     session = get_session()
     try:
         vis = result['visibility']
+
+        # Convert result to JSON-serializable format (remove non-serializable objects)
+        import json
+        serializable_result = {
+            'visibility': vis,
+            'raw_responses': result.get('raw_responses', [])
+        }
+
+        # Test if it's serializable
+        json.dumps(serializable_result)
+
         score = VisibilityScore(
             brand_name=brand_name,
             industry=industry,
@@ -175,14 +186,17 @@ def save_visibility_score(brand_name, industry, result):
             authority_score=vis['component_scores']['authority'],
             total_questions=len(vis['details']),
             mentions_count=sum(1 for d in vis['details'] if d['presence'] > 0),
-            full_result=result
+            full_result=serializable_result
         )
         session.add(score)
         session.commit()
+        print(f"✓ Successfully saved visibility score with ID: {score.id}")
         return score.id
     except Exception as e:
         session.rollback()
-        print(f"Error saving visibility score: {e}")
+        print(f"❌ Error saving visibility score: {e}")
+        import traceback
+        traceback.print_exc()
         raise
     finally:
         session.close()
@@ -192,7 +206,18 @@ def save_competitive_analysis(brand_name, industry, result):
     """Save competitive analysis to database"""
     session = get_session()
     try:
+        import json
         analysis = result['analysis']
+
+        # Create JSON-serializable copy (remove config objects if present)
+        serializable_result = {
+            'analysis': analysis,
+            'competitors': result.get('competitors', [])
+        }
+
+        # Test serialization
+        json.dumps(serializable_result)
+
         comp = CompetitiveAnalysis(
             brand_name=brand_name,
             industry=industry,
@@ -201,14 +226,17 @@ def save_competitive_analysis(brand_name, industry, result):
             target_score=analysis['target_score'],
             competitor_avg_score=analysis['competitor_avg_score'],
             score_difference=analysis['score_difference'],
-            full_result=result
+            full_result=serializable_result
         )
         session.add(comp)
         session.commit()
+        print(f"✓ Successfully saved competitive analysis with ID: {comp.id}")
         return comp.id
     except Exception as e:
         session.rollback()
-        print(f"Error saving competitive analysis: {e}")
+        print(f"❌ Error saving competitive analysis: {e}")
+        import traceback
+        traceback.print_exc()
         raise
     finally:
         session.close()
@@ -218,6 +246,22 @@ def save_ranking_analysis(brand_name, industry, result):
     """Save ranking analysis to database"""
     session = get_session()
     try:
+        import json
+
+        # Create JSON-serializable copy
+        serializable_result = {
+            'total_prompts': result['total_prompts'],
+            'mentioned_count': result['mentioned_count'],
+            'mention_rate': result['mention_rate'],
+            'average_position': result.get('average_position'),
+            'top_3_count': result['top_3_count'],
+            'top_5_count': result['top_5_count'],
+            'all_results': result.get('all_results', [])
+        }
+
+        # Test serialization
+        json.dumps(serializable_result)
+
         ranking = RankingAnalysis(
             brand_name=brand_name,
             industry=industry,
@@ -227,14 +271,17 @@ def save_ranking_analysis(brand_name, industry, result):
             average_position=result.get('average_position'),
             top_3_count=result['top_3_count'],
             top_5_count=result['top_5_count'],
-            full_result=result
+            full_result=serializable_result
         )
         session.add(ranking)
         session.commit()
+        print(f"✓ Successfully saved ranking analysis with ID: {ranking.id}")
         return ranking.id
     except Exception as e:
         session.rollback()
-        print(f"Error saving ranking analysis: {e}")
+        print(f"❌ Error saving ranking analysis: {e}")
+        import traceback
+        traceback.print_exc()
         raise
     finally:
         session.close()
@@ -244,6 +291,20 @@ def save_geographic_score(brand_name, industry, result):
     """Save geographic score to database"""
     session = get_session()
     try:
+        import json
+
+        # Create JSON-serializable copy
+        serializable_result = {
+            'num_countries_analyzed': result['num_countries_analyzed'],
+            'average_presence_score': result['average_presence_score'],
+            'strong_markets': result['strong_markets'],
+            'weak_markets': result['weak_markets'],
+            'country_results': result.get('country_results', [])
+        }
+
+        # Test serialization
+        json.dumps(serializable_result)
+
         geo = GeographicScore(
             brand_name=brand_name,
             industry=industry,
@@ -251,14 +312,17 @@ def save_geographic_score(brand_name, industry, result):
             average_presence_score=result['average_presence_score'],
             strong_markets_count=len(result['strong_markets']),
             weak_markets_count=len(result['weak_markets']),
-            full_result=result
+            full_result=serializable_result
         )
         session.add(geo)
         session.commit()
+        print(f"✓ Successfully saved geographic score with ID: {geo.id}")
         return geo.id
     except Exception as e:
         session.rollback()
-        print(f"Error saving geographic score: {e}")
+        print(f"❌ Error saving geographic score: {e}")
+        import traceback
+        traceback.print_exc()
         raise
     finally:
         session.close()
