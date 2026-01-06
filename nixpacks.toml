@@ -1,0 +1,11 @@
+# Override Railway's auto-detection to fix postgresql_16.dev error
+# psycopg2-binary already includes PostgreSQL libraries, so we don't need dev headers
+
+[phases.setup]
+nixPkgs = ['python39']
+
+[phases.install]
+dependsOn = ['setup']
+
+[start]
+cmd = 'gunicorn app:app --bind 0.0.0.0:$PORT --timeout 600 --workers 1 --threads 2'
