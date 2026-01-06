@@ -122,28 +122,42 @@ def get_database_url():
 
 def init_db():
     """Initialize database and create tables"""
-    database_url = get_database_url()
+    try:
+        database_url = get_database_url()
+        print(f"Database URL (masked): {database_url[:20]}...")
 
-    # Fix for Railway PostgreSQL URL (postgres:// -> postgresql://)
-    if database_url.startswith('postgres://'):
-        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+        # Fix for Railway PostgreSQL URL (postgres:// -> postgresql://)
+        if database_url.startswith('postgres://'):
+            database_url = database_url.replace('postgres://', 'postgresql://', 1)
+            print("✓ Fixed postgres:// to postgresql://")
 
-    engine = create_engine(database_url)
-    Base.metadata.create_all(engine)
-    return engine
+        engine = create_engine(database_url, pool_pre_ping=True, echo=False)
+        Base.metadata.create_all(engine)
+        print("✓ Database tables created successfully")
+        return engine
+    except Exception as e:
+        print(f"⚠️ Database initialization failed: {e}")
+        import traceback
+        traceback.print_exc()
+        # Return None instead of crashing - app can still work without DB
+        return None
 
 
 def get_session():
     """Get database session"""
-    database_url = get_database_url()
+    try:
+        database_url = get_database_url()
 
-    # Fix for Railway PostgreSQL URL
-    if database_url.startswith('postgres://'):
-        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+        # Fix for Railway PostgreSQL URL
+        if database_url.startswith('postgres://'):
+            database_url = database_url.replace('postgres://', 'postgresql://', 1)
 
-    engine = create_engine(database_url)
-    Session = sessionmaker(bind=engine)
-    return Session()
+        engine = create_engine(database_url, pool_pre_ping=True, echo=False)
+        Session = sessionmaker(bind=engine)
+        return Session()
+    except Exception as e:
+        print(f"⚠️ Failed to create database session: {e}")
+        raise
 
 
 def save_visibility_score(brand_name, industry, result):

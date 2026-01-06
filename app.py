@@ -44,12 +44,17 @@ def handle_exception(e):
     traceback.print_exc()
     return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
 
-# Initialize database on startup
+# Initialize database on startup (non-critical - app works without it)
+print("=== Initializing Application ===")
 try:
-    init_db()
-    print("✓ Database initialized successfully")
+    db_engine = init_db()
+    if db_engine:
+        print("✓ Database initialized successfully")
+    else:
+        print("⚠️ Database initialization failed - app will work without historical data")
 except Exception as e:
-    print(f"⚠ Database initialization warning: {e}")
+    print(f"⚠️ Database initialization failed: {e}")
+    print("⚠️ App will continue without database - analysis will still work!")
     import traceback
     traceback.print_exc()
 
@@ -1399,6 +1404,19 @@ def generate_comprehensive_pdf(
 
 
 # Flask Routes
+@app.route('/health')
+def health():
+    """Health check endpoint for debugging"""
+    import sys
+    health_info = {
+        'status': 'ok',
+        'python_version': sys.version,
+        'database_url_exists': bool(os.getenv('DATABASE_URL')),
+        'database_url_prefix': os.getenv('DATABASE_URL', 'sqlite:///')[:30] + '...' if os.getenv('DATABASE_URL') else 'sqlite:///ai_visibility.db'
+    }
+    return jsonify(health_info)
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
